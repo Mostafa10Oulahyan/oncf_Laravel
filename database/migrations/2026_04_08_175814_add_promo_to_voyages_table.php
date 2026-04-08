@@ -11,7 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Columns already exist in the base create_billets_table migration
+        Schema::table('voyages', function (Blueprint $table) {
+            $table->boolean('is_promo')->default(false)->after('prixVoyage');
+            $table->double('price_promo', 8, 2)->nullable()->after('is_promo');
+        });
     }
 
     /**
@@ -19,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('billets', function (Blueprint $table) {
-            $table->dropColumn(['nom_passager', 'prenom_passager', 'cin_passager']);
+        Schema::table('voyages', function (Blueprint $table) {
+            $table->dropColumn(['is_promo', 'price_promo']);
         });
     }
 };

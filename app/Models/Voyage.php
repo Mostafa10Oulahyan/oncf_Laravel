@@ -13,7 +13,19 @@ class Voyage extends Model
         'heureDarrivee',
         'villeDarrivee',
         'prixVoyage',
+        'is_promo',
+        'price_promo',
     ];
+
+    /**
+     * Returns the effective price (promo price if active, else regular price).
+     */
+    public function getEffectivePriceAttribute(): float
+    {
+        return ($this->is_promo && $this->price_promo !== null)
+            ? $this->price_promo
+            : $this->prixVoyage;
+    }
 
     public function commandes()
     {

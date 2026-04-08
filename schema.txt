@@ -1,0 +1,16 @@
+CREATE TABLE `billets` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id_commande` bigint(20) unsigned NOT NULL,
+  `id_voyage` bigint(20) unsigned NOT NULL,
+  `qte` varchar(200) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `nom_passager` varchar(200) DEFAULT NULL,
+  `prenom_passager` varchar(200) DEFAULT NULL,
+  `cin_passager` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `billets_id_commande_id_voyage_unique` (`id_commande`,`id_voyage`),
+  KEY `billets_id_voyage_foreign` (`id_voyage`),
+  CONSTRAINT `billets_id_commande_foreign` FOREIGN KEY (`id_commande`) REFERENCES `commandes` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `billets_id_voyage_foreign` FOREIGN KEY (`id_voyage`) REFERENCES `voyages` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

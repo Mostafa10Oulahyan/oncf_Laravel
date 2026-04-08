@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,7 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Columns already exist in the base create_billets_table migration
+        Schema::table('billets', function (Blueprint $table) {
+            // First add a regular index so the foreign key doesn't break
+            $table->index('id_commande');
+            // Then drop the unique index
+            $table->dropUnique(['id_commande', 'id_voyage']);
+        });
     }
 
     /**
@@ -20,7 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('billets', function (Blueprint $table) {
-            $table->dropColumn(['nom_passager', 'prenom_passager', 'cin_passager']);
+            $table->unique(['id_commande', 'id_voyage']);
         });
     }
 };

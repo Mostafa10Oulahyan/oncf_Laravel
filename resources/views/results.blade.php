@@ -85,8 +85,8 @@
                             @if($loop->first)
                             <span class="text-xs font-semibold bg-green-100 text-green-700 px-2 py-1 rounded-full">Direct</span>
                             @endif
-                            @if($voyage->prixVoyage < 100)
-                            <span class="text-xs font-semibold bg-orange-100 text-orange-700 px-2 py-1 rounded-full">Promo</span>
+                            @if($voyage->is_promo)
+                            <span class="text-xs font-bold bg-red-100 text-red-600 px-2 py-1 rounded-full animate-pulse">🏷️ Promo</span>
                             @endif
                         </div>
                         
@@ -125,7 +125,12 @@
                     <!-- Price & Add to Cart -->
                     <div class="flex flex-col items-end gap-3">
                         <div class="text-right">
-                            <div class="text-3xl font-bold text-oncf-blue">{{ number_format($voyage->prixVoyage, 2) }} DH</div>
+                            @if($voyage->is_promo && $voyage->price_promo)
+                                <div class="text-sm text-gray-400 line-through">{{ number_format($voyage->prixVoyage, 2) }} DH</div>
+                                <div class="text-3xl font-bold text-red-600">{{ number_format($voyage->price_promo, 2) }} DH</div>
+                            @else
+                                <div class="text-3xl font-bold text-oncf-blue">{{ number_format($voyage->prixVoyage, 2) }} DH</div>
+                            @endif
                             <div class="text-sm text-gray-500">par personne</div>
                         </div>
                         

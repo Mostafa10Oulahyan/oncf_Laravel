@@ -49,9 +49,8 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Admin routes - Protected by AdminMiddleware
-// TEMPORARY: Middleware disabled until AdminMiddleware.php is created
-Route::prefix('admin')->group(function () {
+// Admin routes - Protected by AdminMiddleware (auth + role=ADMIN required)
+Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/voyages/create', [AdminController::class, 'createVoyage'])->name('admin.voyages.create');
     Route::post('/voyages', [AdminController::class, 'storeVoyage'])->name('admin.voyages.store');

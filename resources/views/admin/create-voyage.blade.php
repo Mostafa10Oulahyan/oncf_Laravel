@@ -3,11 +3,17 @@
 @section('title', 'Ajouter un Voyage - Admin')
 
 @section('content')
+<script src="https://unpkg.com/lucide@latest"></script>
 <div class="min-h-screen bg-gray-50 py-12">
     <div class="max-w-3xl mx-auto px-4">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">➕ Ajouter un Voyage</h1>
-            <p class="text-gray-600 mt-2">Créer un nouveau voyage ONCF</p>
+        <div class="mb-8 flex items-center gap-3">
+            <div class="w-10 h-10 bg-oncf-blue rounded-xl flex items-center justify-center shadow">
+                <i data-lucide="plus" class="w-5 h-5 text-white"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Ajouter un Voyage</h1>
+                <p class="text-gray-600 mt-1">Créer un nouveau voyage ONCF</p>
+            </div>
         </div>
 
         <div class="bg-white rounded-2xl shadow-lg p-8">
@@ -63,11 +69,34 @@
                 </div>
 
                 <!-- Prix -->
-                <div class="mb-8">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Prix (DH) *</label>
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Prix Normal (DH) *</label>
                     <input type="number" name="prixVoyage" value="{{ old('prixVoyage') }}" required min="0" step="0.01"
                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-oncf-blue focus:border-transparent"
                            placeholder="Ex: 120.00">
+                </div>
+
+                <!-- Promo Section -->
+                <div class="mb-8 bg-orange-50 border border-orange-200 rounded-xl p-5" x-data="{ isPromo: {{ old('is_promo') ? 'true' : 'false' }} }">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <p class="font-semibold text-gray-800">🏷️ Activer une Promotion</p>
+                            <p class="text-sm text-gray-500">Le prix promotionnel sera affiché avec le prix barré</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="is_promo" value="1" x-model="isPromo" class="sr-only peer"
+                                   {{ old('is_promo') ? 'checked' : '' }}>
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+                        </label>
+                    </div>
+                    <div x-show="isPromo" x-transition class="mt-3">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Prix Promotionnel (DH) *</label>
+                        <input type="number" name="price_promo" value="{{ old('price_promo') }}" min="0" step="0.01"
+                               :required="isPromo"
+                               class="w-full px-4 py-3 border border-orange-300 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-white"
+                               placeholder="Ex: 75.00">
+                        <p class="text-xs text-orange-600 mt-1">💡 Ce prix doit être inférieur au prix normal</p>
+                    </div>
                 </div>
 
                 <!-- Buttons -->
@@ -85,4 +114,5 @@
         </div>
     </div>
 </div>
+<script>document.addEventListener('DOMContentLoaded', () => lucide.createIcons());</script>
 @endsection
