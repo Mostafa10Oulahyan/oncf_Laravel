@@ -30,16 +30,17 @@ Route::get('/cart/clear', [CartController::class, 'clear']);
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', [BookingController::class, 'checkout']);
     Route::post('/checkout', [BookingController::class, 'processCheckout']);
-    
+
     // Payment routes
     Route::get('/payment', [BookingController::class, 'payment']);
     Route::post('/payment', [BookingController::class, 'processPayment']);
-    
+
     // Confirmation
     Route::get('/confirmation', [BookingController::class, 'confirmation']);
-    
+
     // My Tickets
     Route::get('/my-tickets', [BookingController::class, 'myTickets'])->name('my-tickets');
+    Route::delete('/billets/{id}', [BookingController::class, 'deleteTicket'])->name('billets.delete');
 });
 
 // Auth routes

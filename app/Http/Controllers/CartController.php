@@ -42,7 +42,7 @@ class CartController extends Controller
                 'villeDarrivee' => $voyage->villeDarrivee,
                 'heureDepart' => $voyage->heureDepart,
                 'heureDarrivee' => $voyage->heureDarrivee,
-                'prix' => $voyage->prixVoyage,
+                'prix' => $voyage->effective_price,
                 'quantity' => $quantity,
             ];
         }

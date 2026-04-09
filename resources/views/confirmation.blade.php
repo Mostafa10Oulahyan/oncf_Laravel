@@ -103,7 +103,7 @@
                             $qrData .= "Train: " . $billet->voyage->code_voyage . "\n";
                             $qrData .= "De: " . $billet->voyage->villeDepart . " (" . $billet->voyage->heureDepart . ")\n";
                             $qrData .= "A: " . $billet->voyage->villeDarrivee . " (" . $billet->voyage->heureDarrivee . ")\n";
-                            $qrData .= "Prix: " . number_format($billet->voyage->prixVoyage, 2) . " DH\n";
+                            $qrData .= "Prix: " . number_format($billet->voyage->effective_price, 2) . " DH\n";
                             $qrData .= "Date: " . date('Y-m-d H:i');
                             ?>
                             <img src="https://api.qrserver.com/v1/create-qr-code/?size=128x128&data={{ urlencode($qrData) }}" 
@@ -113,7 +113,7 @@
                         
                         <div class="text-center">
                             <div class="text-sm text-gray-500">Prix</div>
-                            <div class="text-2xl font-bold text-oncf-blue">{{ number_format($billet->voyage->prixVoyage, 2) }} DH</div>
+                            <div class="text-2xl font-bold text-oncf-blue">{{ number_format($billet->voyage->effective_price, 2) }} DH</div>
                         </div>
                     </div>
                 </div>

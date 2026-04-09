@@ -20,8 +20,9 @@ class BookingController extends Controller
             return redirect('/login')->with('error', 'Veuillez vous connecter pour voir vos billets');
         }
 
-        // Get user's commandes with billets and voyages
+        // Get user's commandes with billets and voyages (only PAID ones)
         $commandes = Commande::where('id_client', Auth::id())
+            ->where('status', 'PAID')
             ->with(['billets.voyage'])
             ->orderBy('created_at', 'desc')
             ->get();
@@ -136,7 +137,7 @@ class BookingController extends Controller
 
         $total = 0;
         foreach ($commande->voyages as $voyage) {
-            $total += $voyage->prixVoyage * $voyage->pivot->qte;
+            $total += $voyage->effective_price * $voyage->pivot->qte;
         }
 
         return view('payment', compact('commande', 'total'));
@@ -151,6 +152,13 @@ class BookingController extends Controller
 
         if (!$commandeId) {
             return redirect('/')->with('error', 'Aucune commande en cours');
+        }
+
+        // Mark order as PAID
+        $commande = Commande::find($commandeId);
+        if ($commande) {
+            $commande->status = 'PAID';
+            $commande->save();
         }
 
         // Simulate payment success
@@ -175,5 +183,28 @@ class BookingController extends Controller
         $billets = Billet::with('voyage')->where('id_commande', $commandeId)->get();
 
         return view('confirmation', compact('commande', 'billets'));
+    }
+    /**
+     * Delete (cancel) a ticket
+     */
+    public function deleteTicket($id)
+    {
+        $billet = Billet::with('commande')->findOrFail($id);
+
+        // Security: Check if the ticket belongs to the authenticated user
+        if ($billet->commande->id_client != Auth::id()) {
+            return redirect()->back()->with('error', 'Action non autorisée');
+        }
+
+        $commandeId = $billet->id_commande;
+        $billet->delete();
+
+        // Optional: If the commande has no more tickets, delete the commande too
+        $remainingBillets = Billet::where('id_commande', $commandeId)->count();
+        if ($remainingBillets === 0) {
+            Commande::destroy($commandeId);
+        }
+
+        return redirect()->back()->with('success', 'Billet annulé avec succès');
     }
 }
